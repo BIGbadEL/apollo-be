@@ -23,6 +23,7 @@ mongoose
                 res.send('Hello World!');
             });
             app.post('/', (req, res) => {
+                console.log(req);
                 const doggy = new Dog({ name: 'Gama' });
                 doggy.save().then(() => console.log('Woof'));
             });
