@@ -27,7 +27,7 @@ const pollSchema = new mongoose.Schema({
         required: true
     },
     expire: {
-        type: Data,
+        type: Date,
         required: true
     }
 });
