@@ -16,9 +16,9 @@ client.connect(err => {
   //const quotesCollection = db.collection('questions');
 
 
-  //app.use(bodyParser.urlencoded({ extended: true }));
-//   app.get('/', (req, res) => res.send('Hello World!'));
-//   app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.get('/', (req, res) => res.send('Hello World!'));
+  app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 
    client.close();
 });
