@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const questionSchema = require('question');
 
-const poolSchema = new mongoose.Schema({
+const pollSchema = new mongoose.Schema({
     pinUser: {
         type: Number,
         required: true
