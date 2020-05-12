@@ -3,25 +3,33 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://apollo-io:io_Projekt@io-projekt-4qiaf.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-const app = express();
-const port = 3000;
-client.connect(err => {
-  if (err) return console.error(err);
-  console.log('Connected to Database');
-  const db = client.db('apollo-db');
-  const quotesCollection = db.collection('questions');
+const mongoose = require('mongoose');
 
 
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.get('/', (req, res) => res.send('Hello World!'));
-  app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`));
+const Cat = mongoose.model('Cat', { name: String });
+mongoose
+    .connect('mongodb+srv://apollo-io:io_Projekt@io-projekt-4qiaf.mongodb.net/test?retryWrites=true&w=majority', {
+        useNewUrlParser: true, 
+        useUnifiedTopology: true})
+        .then(() => {
+            const app = express();
+            const port = 3000;
 
-   //client.close();
-});
+
+            app.use(bodyParser.urlencoded({ extended: true }));
+            app.get('/', (req, res) => {
+                const kitty = new Cat({ name: 'Zildjian' });
+                kitty.save().then(() => console.log('meow'));
+                res.send('Hello World!');
+            });
+            app.post('/', (req, res) => {
+                const doggy = new Dog({ name: 'Gama' });
+                doggy.save().then(() => console.log('Woof'));
+            });
+            app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`));
+        });
+
+
 
 
 
