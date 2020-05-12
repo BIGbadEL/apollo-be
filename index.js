@@ -13,12 +13,12 @@ client.connect(err => {
   if (err) return console.error(err);
   console.log('Connected to Database');
   const db = client.db('apollo-db');
-  //const quotesCollection = db.collection('questions');
+  const quotesCollection = db.collection('questions');
 
 
-  //app.use(bodyParser.urlencoded({ extended: true }));
-  //app.get('/', (req, res) => res.send('Hello World!'));
-  app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.get('/', (req, res) => res.send('Hello World!'));
+  app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`));
 
    //client.close();
 });
