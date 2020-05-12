@@ -1,33 +1,19 @@
 const mongoose = require('mongoose');
 const questionSchema = require('question');
+const settingsSchema = require('settings');
+const coreSchema = require('core');
 
 const pollSchema = new mongoose.Schema({
-    pinUser: {
-        type: Number,
+    core: {
+        type: coreSchema,
         required: true
     }, 
-    pinCreator: {
-        type: Number,
-        required: true
-    },
-    url: {
-        type: String,
-        required: true
-    },
     questions: {
         type: [questionSchema],
         required: true
     },
-    requireSignature: {
-        type: Boolean,
-        required: true
-    },
-    resultsAccess: {
-        type: String,
-        required: true
-    },
-    expire: {
-        type: Date,
+    settings: {
+        type: settingsSchema,
         required: true
     }
 });
