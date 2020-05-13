@@ -81,8 +81,13 @@ router.post('/login', async (req, res) => {
     let poll = await find_poll_by_url(req.body.url);
     if(!poll){
         res.status(404).send("Not found.");
+    } else if (poll.core.pinUser === req.body.pin) {
+        res.send( {"isCreator": false } );
+    } else if (poll.core.pinCreator === req.body.pin) {
+        res.send( {"isCreator": true } );
+    } else {
+        res.status(404).send("Wrong pin.");
     }
-    res.send( {"isCreator": true } );
 });
 
 module.exports = router;
