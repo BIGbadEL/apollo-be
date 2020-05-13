@@ -51,8 +51,8 @@ router.get('/new', async (req, res) => {
     dateObj.setDate(dateObj.getDate() + 7);
     const poll = new Poll({
         core: new Core({
-            pinUser: Math.floor(Math.random() * 9999),
-            pinCreator: Math.floor(Math.random() * 9999),
+            pinUser: Math.floor((Math.random() * (9999 - 1000)) + 1000),
+            pinCreator: Math.floor((Math.random() * (9999 - 1000)) + 1000),
             url: await generate_unique_url()
         }),
         questions: [],
