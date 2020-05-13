@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const questionSchema = require('question');
-const settingsSchema = require('settings');
-const coreSchema = require('core');
+const { questionSchema, Question } = require('./question');
+const { settingsSchema, Settings } = require('./settings');
+const { Core, coreSchema } = require('./core');
 
 const pollSchema = new mongoose.Schema({
     core: {
@@ -17,3 +17,7 @@ const pollSchema = new mongoose.Schema({
         required: true
     }
 });
+
+const Poll = new mongoose.model('Pool', pollSchema);
+exports.Poll = Poll;
+exports.PollSchema = pollSchema;

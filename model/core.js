@@ -15,4 +15,6 @@ const coreSchema = new mongoose.Schema({
     }
 });
 
+const Core = new mongoose.model('Core', coreSchema);
 exports.coreSchema = coreSchema;
+exports.Core = Core;
