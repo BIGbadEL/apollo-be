@@ -22,22 +22,6 @@ router.put('/:url', async (req, res) => {
     if(!old_poll){
         res.send("Url not found");
     }
-    const q = [];
-    req.body.poll.questions.forEach(element => {
-        q.push(new Question ({
-            id: element.id,
-            value: element.value,
-            options: element.options,
-            type: element.type
-        }));
-    });
-    old_poll.questions = q;
-    old_poll.settings = new Settings({
-        requireSignature: req.body.poll.settings.requireSignature,
-        resultsAccess: req.body.poll.settings.resultsAccess,
-        expire: req.body.poll.settings.expire
-    });
-    await Poll.findByIdAndUpdate(old_poll._id, old_poll);
     res.send("OK");
 });
 
@@ -46,7 +30,7 @@ router.get('/:url', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    res.send(await await Poll.find());
+    res.send(await Poll.find());
 });
 
 router.delete('/', (req, res) => {

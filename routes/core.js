@@ -90,4 +90,10 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
+router.get('/:url', async (req, res) => {
+    res.send((await find_poll_by_url(req.params.url)).core);
+});
+
+
 module.exports = router;
