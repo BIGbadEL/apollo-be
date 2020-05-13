@@ -46,7 +46,7 @@ async function generate_unique_url() {
     return result;
 }
 
-router.get('/', async (req, res) => {
+router.get('/new', async (req, res) => {
     let dateObj = new Date();
     dateObj.setDate(dateObj.getDate() + 7);
     const poll = new Poll({
@@ -64,6 +64,25 @@ router.get('/', async (req, res) => {
     });
     await poll.save()
     res.send(poll.core);
+});
+
+async function find_poll_by_url(url) {
+    const result = await Poll.find();
+    for(let i = 0; i < result.length; i++){
+        if (result[i].core.url === url){
+            return result[i];
+        }
+    }
+    return false;
+}
+
+router.post('/login', async (req, res) => {
+    console.log(req.body.url);
+    let poll = await find_poll_by_url(req.body.url);
+    if(!poll){
+        res.status(404).send("Not found.");
+    }
+    res.send( {"isCreator": true } );
 });
 
 module.exports = router;

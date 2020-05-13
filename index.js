@@ -19,9 +19,8 @@ mongoose
             app.use(bodyParser.urlencoded({ extended: true }));
             app.use(express.json());
             app.use('/api/polls', polls);
-            app.use('/api/core/new', cores);
+            app.use('/api/core', cores);
             app.get('/' ,(req, res) => {
-                
                 res.send('Hello World!');
             });
             app.post('/', async (req, res) => {
