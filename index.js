@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const polls = require('./routes/polls');
+const cores = require('./routes/core');
 
 mongoose
     .connect('mongodb+srv://apollo-io:io_Projekt@io-projekt-4qiaf.mongodb.net/test?retryWrites=true&w=majority', {
@@ -18,7 +19,9 @@ mongoose
             app.use(bodyParser.urlencoded({ extended: true }));
             app.use(express.json());
             app.use('/api/polls', polls);
+            app.use('/api/core/new', cores);
             app.get('/' ,(req, res) => {
+                
                 res.send('Hello World!');
             });
             app.post('/', async (req, res) => {

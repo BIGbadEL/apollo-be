@@ -6,7 +6,22 @@ const { settingsSchema, Settings } = require('../model/settings');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+async function find_poll_by_url(url) {
+    const result = await Poll.find();
+    for(let i = 0; i < result.length; i++){
+        if (result[i].core.url === url){
+            return result[i];
+        }
+    }
+    return false;
+}
+
+router.put('/:url', async (req, res) => {
+    console.log(req.params.url);
+    let old_poll = await find_poll_by_url(req.params.url);
+    if(!old_poll){
+        res.send("Url not found");
+    }
     const q = [];
     req.body.poll.questions.forEach(element => {
         q.push(new Question ({
@@ -16,26 +31,22 @@ router.post('/', async (req, res) => {
             type: element.type
         }));
     });
-    const poll = new Poll({
-        core: new Core({
-            pinUser: req.body.init.pinUser,
-            pinCreator: req.body.init.pinCreator,
-            url: req.body.init.url
-        }),
-        questions: q,
-        settings: new Settings({
-            requireSignature: req.body.poll.settings.requireSignature,
-            resultsAccess: req.body.poll.settings.resultsAccess,
-            expire: req.body.poll.settings.expire
-        })
+    old_poll.questions = q;
+    old_poll.settings = new Settings({
+        requireSignature: req.body.poll.settings.requireSignature,
+        resultsAccess: req.body.poll.settings.resultsAccess,
+        expire: req.body.poll.settings.expire
     });
-    console.log(poll);
-    await poll.save();
+    await Poll.findByIdAndUpdate(old_poll._id, old_poll);
     res.send("OK");
 });
 
-router.get('/', (req, res) => {
+router.get('/:url', async (req, res) => {
+    res.send(await find_poll_by_url(req.params.url));
+});
 
+router.get('/', async (req, res) => {
+    res.send(await await Poll.find());
 });
 
 router.delete('/', (req, res) => {
