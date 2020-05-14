@@ -101,7 +101,8 @@ router.get('/:url', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    res.send(await Poll.find());
+    const result = (await Poll.find()).map(poll => poll.core);
+    res.send(result);
 });
 
 
