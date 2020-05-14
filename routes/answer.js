@@ -21,11 +21,4 @@ router.post('/', async (req, res) => {
     res.send("OK");
 });
 
-
-router.get('/', async (req, res) => {
-    res.send("");
-});
-
-
-
 module.exports = router;
