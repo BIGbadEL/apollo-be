@@ -100,5 +100,9 @@ router.get('/:url', async (req, res) => {
     }
 });
 
+router.get('/', async (req, res) => {
+    res.send(await Poll.find());
+});
+
 
 module.exports = router;
