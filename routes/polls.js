@@ -7,13 +7,23 @@ const { settingsSchema, Settings } = require('../model/settings');
 const router = express.Router();
 
 async function find_poll_by_url(url) {
-    console.log(req.params.url);
-    let old_poll = await find_poll_by_url(req.params.url);
+    const result = await Poll.find();
+    for(let i = 0; i < result.length; i++){
+        if (result[i].core.url === url){
+            return result[i];
+        }
+    }
+    return false;
+}
+
+router.put('/', async (req, res) => {
+    console.log(req.body.url);
+    let old_poll = await find_poll_by_url(req.body.url);
     if(!old_poll){
         res.send("Url not found");
     }
     const q = [];
-    req.body.poll.questions.forEach(element => {
+    req.body.questions.forEach(element => {
         q.push(new Question ({
             id: element.id,
             value: element.value,
@@ -23,20 +33,11 @@ async function find_poll_by_url(url) {
     });
     old_poll.questions = q;
     old_poll.settings = new Settings({
-        requireSignature: req.body.poll.settings.requireSignature,
-        resultsAccess: req.body.poll.settings.resultsAccess,
-        expire: req.body.poll.settings.expire
+        requireSignature: req.body.settings.requireSignature,
+        resultsAccess: req.body.settings.resultsAccess,
+        expire: req.body.settings.expire
     });
     await Poll.findByIdAndUpdate(old_poll._id, old_poll);
-    res.send("OK");
-}
-
-router.put('/:url', async (req, res) => {
-    console.log(req.params.url);
-    let old_poll = await find_poll_by_url(req.params.url);
-    if(!old_poll){
-        res.send("Url not found");
-    }
     res.send("OK");
 });
 

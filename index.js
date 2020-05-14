@@ -19,7 +19,7 @@ mongoose
 
             app.use(bodyParser.urlencoded({ extended: true }));
             app.use(express.json());
-            app.use('/api/polls', polls);
+            app.use('/api/poll', polls);
             app.use('/api/core', cores);
             app.use('/api/answer', answer);
             app.get('/' ,(req, res) => {
