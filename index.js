@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const polls = require('./routes/polls');
 const cores = require('./routes/core');
+const answer = require('./routes/answer');
 
 mongoose
     .connect('mongodb+srv://apollo-io:io_Projekt@io-projekt-4qiaf.mongodb.net/test?retryWrites=true&w=majority', {
@@ -20,6 +21,7 @@ mongoose
             app.use(express.json());
             app.use('/api/polls', polls);
             app.use('/api/core', cores);
+            app.use('/api/answer', answer);
             app.get('/' ,(req, res) => {
                 res.send('Hello World!');
             });

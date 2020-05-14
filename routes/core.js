@@ -82,9 +82,9 @@ router.post('/login', async (req, res) => {
     if(!poll){
         res.status(404).send("Not found.");
     } else if (poll.core.pinUser === req.body.pin) {
-        res.send( {"isCreator": false } );
+        res.send( { "isCreator": false } );
     } else if (poll.core.pinCreator === req.body.pin) {
-        res.send( {"isCreator": true } );
+        res.send( { "isCreator": true } );
     } else {
         res.status(404).send("Wrong pin.");
     }
@@ -92,7 +92,12 @@ router.post('/login', async (req, res) => {
 
 
 router.get('/:url', async (req, res) => {
-    res.send((await find_poll_by_url(req.params.url)).core);
+    const result = await find_poll_by_url(req.params.url);
+    if(result){
+        res.send(result.core);
+    } else {
+        res.status(404).send("Not found.");
+    }
 });
 
 
