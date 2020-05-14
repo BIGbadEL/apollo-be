@@ -13,4 +13,8 @@ router.post('/', async (req, res) => {
     res.send("OK");
 });
 
+router.get('/', async (req, res) => {
+    res.send(await Rating.find());
+});
+
 module.exports = router;
