@@ -9,8 +9,14 @@ const { answerSchema, Answer } = require('../model/answer');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    console.log(req.body);
-    req.body.answer[0]
+    req.body.answer.forEach(async element => {
+        const answer = new Answer({
+            questionId: element.id, 
+            value: element.value,
+            signature: req.body.signature
+        });
+        await answer.save();
+    });
 
     res.send("OK");
 });
