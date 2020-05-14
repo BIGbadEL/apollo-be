@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const polls = require('./routes/polls');
 const cores = require('./routes/core');
 const answer = require('./routes/answer');
@@ -20,6 +21,7 @@ mongoose
 
             app.use(bodyParser.urlencoded({ extended: true }));
             app.use(express.json());
+            app.use(cors());
             app.use('/api/poll', polls);
             app.use('/api/core', cores);
             app.use('/api/answer', answer);
