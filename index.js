@@ -10,34 +10,34 @@ const cores = require('./routes/core');
 const answer = require('./routes/answer');
 const rating = require('./routes/rating');
 const results = require('./routes/results');
-
 mongoose
     .connect('mongodb+srv://apollo-io:io_Projekt@io-projekt-4qiaf.mongodb.net/test?retryWrites=true&w=majority', {
         useNewUrlParser: true, 
         useUnifiedTopology: true
     })
-        .then(() => {
-            const app = express();
-            const port = 3000;
+        .then(async () => {});
+        
+        const app = express();
+        const port = 3000;
 
-            app.use(bodyParser.urlencoded({ extended: true }));
-            app.use(express.json());
-            app.use(cors());
-            app.use('/api/poll', polls);
-            app.use('/api/core', cores);
-            app.use('/api/answer', answer);
-            app.use('/api/rating', rating);
-            app.use('/api/results', results);
-            app.get('/' ,(req, res) => {
-                res.send('Hello World!');
-            });
-            app.post('/', async (req, res) => {
-                res.send("OK");
-            });
-            app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`));
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(express.json());
+        app.use(cors());
+        app.use('/api/poll', polls);
+        app.use('/api/core', cores);
+        app.use('/api/answer', answer);
+        app.use('/api/rating', rating);
+        app.use('/api/results', results);
+        app.get('/' ,(req, res) => {
+            res.send('Hello World!');
         });
-
-
+        app.post('/', async (req, res) => {
+            res.send("OK");
+        });
+        const server = app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`));
+        console.log(server.address());
+        console.log(server);
+        exports.server = server;
 
 
 
