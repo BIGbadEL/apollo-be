@@ -21,13 +21,32 @@ async function find_poll_by_url(url) {
 router.get('/:url', async (req, res) => {
     const poll = await find_poll_by_url(req.params.url);
     console.log(poll);
-    const answers = [];
+    const result = [];
     if(poll) {
         poll.questions.forEach(async element => {
-            answers.push(await Answer.findOne({ questionId: element._id }));
+            result.push({
+                title: element.value,
+                answers: element.options.map(element => {
+                    return ({
+                        value: element,
+                        count: 0
+                    });
+                }),
+                type: element.type
+            });
+            const answers = await Answer.find({ questionId: element._id });
+            answers.forEach(element => {
+                element.forEach(val => {
+                    result[result.length - 1].answers.forEach(option => {
+                        if (option.value == val){
+                            option.count += 1;
+                        }
+                    })
+                })
+            });
         });
-        console.log(answers)
-        res.send(JSON.stringify(answers));
+        console.log(result);
+        res.send(JSON.stringify(result));
     } else {
         res.send([]);
     }
