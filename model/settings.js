@@ -9,6 +9,13 @@ const settingsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    sendSumary: {
+        type: Boolean,
+        required: true
+    },
+    email: {
+        type: String,
+    },
     expire: {
         type: Date,
         required: true

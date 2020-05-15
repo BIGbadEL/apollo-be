@@ -59,9 +59,12 @@ router.get('/new', async (req, res) => {
         settings: new Settings({
             requireSignature: false,
             resultsAccess: true,
+            sendSumary: false,
+            email: "",
             expire: dateObj
         })
     });
+    console.log(poll.settings);
     await poll.save()
     res.send(poll.core);
 });

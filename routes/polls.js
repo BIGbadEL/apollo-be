@@ -35,6 +35,8 @@ router.put('/', async (req, res) => {
     old_poll.settings = new Settings({
         requireSignature: req.body.settings.requireSignature,
         resultsAccess: req.body.settings.resultsAccess,
+        sendSumary: req.body.settings.sendSumary,
+        email: req.body.settings.email,
         expire: req.body.settings.expire
     });
     await Poll.findByIdAndUpdate(old_poll._id, old_poll);

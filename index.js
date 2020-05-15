@@ -9,6 +9,7 @@ const polls = require('./routes/polls');
 const cores = require('./routes/core');
 const answer = require('./routes/answer');
 const rating = require('./routes/rating');
+const results = require('./routes/results');
 
 mongoose
     .connect('mongodb+srv://apollo-io:io_Projekt@io-projekt-4qiaf.mongodb.net/test?retryWrites=true&w=majority', {
@@ -26,6 +27,7 @@ mongoose
             app.use('/api/core', cores);
             app.use('/api/answer', answer);
             app.use('/api/rating', rating);
+            app.use('/api/results', results);
             app.get('/' ,(req, res) => {
                 res.send('Hello World!');
             });
