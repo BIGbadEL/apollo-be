@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     req.body.answer.forEach(async element => {
         const answer = new Answer({
-            questionId: element._id, 
+            questionId: element.id, 
             value: element.value,
             signature: req.body.signature
         });

@@ -20,11 +20,9 @@ async function find_poll_by_url(url) {
 
 router.get('/:url', async (req, res) => {
     const poll = await find_poll_by_url(req.params.url);
-    //console.log(poll);
     const result = poll ? await Promise.all(poll.questions.map(async element => {
         const answers = await Answer.find({ questionId: element._id });
         console.log(element.value , answers);
-        //console.log(element.options);
         return {
             title: element.value,
             type: element.type,
@@ -34,8 +32,6 @@ router.get('/:url', async (req, res) => {
             }))
         }
     })) : [];
-    //console.log(result);
-    //console.log(poll);
     res.send(result);
 });
 
