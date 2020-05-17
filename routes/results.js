@@ -23,16 +23,19 @@ router.get('/:url', async (req, res) => {
     //console.log(poll);
     const result = poll ? await Promise.all(poll.questions.map(async element => {
         const answers = await Answer.find({ questionId: element._id });
+        console.log(element.value , answers);
+        //console.log(element.options);
         return {
             title: element.value,
             type: element.type,
-            answers: element.options.map(answer => ({
+            answers: element.type === 'text' ? answers.map(ans => ans.value).flat() : element.options.map(answer => ({
                 value: answer,
                 count: answers.reduce((acc, val) => acc + val.value.includes(answer), 0)
             }))
         }
     })) : [];
-    console.log(result);
+    //console.log(result);
+    //console.log(poll);
     res.send(result);
 });
 
