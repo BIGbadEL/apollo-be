@@ -9,7 +9,7 @@ const settingsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    sendSumary: {
+    sendSummary: {
         type: Boolean,
         required: true
     },

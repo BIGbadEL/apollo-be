@@ -9,7 +9,7 @@ const router = express.Router();
 async function find_poll_by_url(url) {
     const result = await Poll.find();
     for(let i = 0; i < result.length; i++){
-        if (result[i].core.url === url){
+        if (result[i].core.url === url) {
             return result[i];
         }
     }
