@@ -21,38 +21,19 @@ async function find_poll_by_url(url) {
 router.get('/:url', async (req, res) => {
     const poll = await find_poll_by_url(req.params.url);
     //console.log(poll);
-    const result = [];
-    if(poll) {
-        poll.questions.forEach(async element => {
-            result.push({
-                title: element.value,
-                answers: element.options.map(element => {
-                    return ({
-                        value: element,
-                        count: 0
-                    });
-                }),
-                type: element.type
-            });
-            const answers = await Answer.find({ questionId: element._id });
-            console.log(element._id)
-            console.log(answers);
-            answers.forEach(element => {
-                console.log("xD");
-                element.forEach(val => {
-                    result[result.length - 1].answers.forEach(option => {
-                        if (option.value == val){
-                            option.count += 1;
-                        }
-                    })
-                })
-            });
-        });
-        //console.log(result);
-        res.send(result);
-    } else {
-        res.send([]);
-    }
+    const result = poll ? await Promise.all(poll.questions.map(async element => {
+        const answers = await Answer.find({ questionId: element._id });
+        return {
+            title: element.value,
+            type: element.type,
+            answers: element.options.map(answer => ({
+                value: answer,
+                count: answers.reduce((acc, val) => acc + val.value.includes(answer), 0)
+            }))
+        }
+    })) : [];
+    console.log(result);
+    res.send(result);
 });
 
 module.exports = router;
