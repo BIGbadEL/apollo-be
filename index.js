@@ -35,8 +35,6 @@ mongoose
             res.send("OK");
         });
         const server = app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`));
-        console.log(server.address());
-        console.log(server);
         exports.server = server;
 
 

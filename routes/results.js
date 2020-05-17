@@ -20,7 +20,7 @@ async function find_poll_by_url(url) {
 
 router.get('/:url', async (req, res) => {
     const poll = await find_poll_by_url(req.params.url);
-    console.log(poll);
+    //console.log(poll);
     const result = [];
     if(poll) {
         poll.questions.forEach(async element => {
@@ -35,7 +35,10 @@ router.get('/:url', async (req, res) => {
                 type: element.type
             });
             const answers = await Answer.find({ questionId: element._id });
+            console.log(element._id)
+            console.log(answers);
             answers.forEach(element => {
+                console.log("xD");
                 element.forEach(val => {
                     result[result.length - 1].answers.forEach(option => {
                         if (option.value == val){
@@ -45,8 +48,8 @@ router.get('/:url', async (req, res) => {
                 })
             });
         });
-        console.log(result);
-        res.send(JSON.stringify(result));
+        //console.log(result);
+        res.send(result);
     } else {
         res.send([]);
     }
