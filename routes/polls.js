@@ -35,7 +35,7 @@ router.put('/', async (req, res) => {
     old_poll.settings = new Settings({
         requireSignature: req.body.settings.requireSignature,
         resultsAccess: req.body.settings.resultsAccess,
-        sendSumary: req.body.settings.sendSumary,
+        sendSummary: req.body.settings.sendSummary,
         email: req.body.settings.email,
         expire: req.body.settings.expire
     });
