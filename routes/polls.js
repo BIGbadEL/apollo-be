@@ -3,6 +3,7 @@ const { questionSchema, Question } = require('../model/question');
 const { PollSchema, Poll } = require('../model/poll');
 const { coreSchema, Core } = require('../model/core');
 const { settingsSchema, Settings } = require('../model/settings');
+const { answerSchema, Answer } = require('../model/answer');
 
 const router = express.Router();
 
@@ -31,6 +32,16 @@ router.put('/', async (req, res) => {
             type: element.type
         }));
     });
+    for(let i = 0; i < old_poll.questions.length; i++){
+        const answers = await Answer.find();
+        console.log("Answers: ", answers);
+        for(let j = 0; j < answers.length; j++) {
+            if(answers[j].questionId == old_poll.questions[i]._id) {
+                answers[j].questionId = q[i]._id;
+                await Answer.findByIdAndUpdate(answers[j]._id, answers[j]);
+            }
+        }
+    }
     old_poll.questions = q;
     old_poll.settings = new Settings({
         requireSignature: req.body.settings.requireSignature,
