@@ -19,6 +19,7 @@ async function find_poll_by_url(url) {
 
 router.put('/', async (req, res) => {
     console.log(req.body.url);
+    console.log(req.body);
     let old_poll = await find_poll_by_url(req.body.url);
     if(!old_poll){
         res.send("Url not found");
@@ -51,6 +52,7 @@ router.put('/', async (req, res) => {
         expire: req.body.settings.expire
     });
     await Poll.findByIdAndUpdate(old_poll._id, old_poll);
+    console.log(old_poll.questions);
     res.send("OK");
 });
 
