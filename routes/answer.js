@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     req.body.answer.forEach(async element => {
+        console.log(element._id);
         const answer = new Answer({
             questionId: element._id, 
             value: element.value,
