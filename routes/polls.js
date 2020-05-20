@@ -1,4 +1,6 @@
 const express = require('express');
+var cron = require('node-cron');
+ 
 const { questionSchema, Question } = require('../model/question');
 const { PollSchema, Poll } = require('../model/poll');
 const { coreSchema, Core } = require('../model/core');
@@ -15,6 +17,91 @@ async function find_poll_by_url(url) {
         }
     }
     return false;
+}
+
+"use strict";
+const nodemailer = require("nodemailer");
+
+async function get_results(url){
+    const poll = await find_poll_by_url(url);
+    const result = poll ? await Promise.all(poll.questions.map(async element => {
+        const answers = await Answer.find({ questionId: element._id });
+        console.log(element._id, element.value , answers);
+        return {
+            title: element.value,
+            type: element.type,
+            total: answers.length,
+            answers: element.type === 'text' ? answers.map(ans => ans.value).flat() : element.options.map(answer => ({
+                value: answer,
+                count: answers.reduce((acc, val) => acc + val.value.includes(answer), 0)
+            }))
+        }
+    })) : [];
+    return result;
+}
+
+
+async function send_email(poll) {
+    let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, 
+    auth: {
+        user: 'apollo.ankiety@gmail.com', 
+        pass: 'io-Projekt', 
+    },
+    });
+
+    const result = await get_results(poll.core.url);
+    if(result.length == 0)
+        return;
+    let total = 0;
+    for(let i = 0; i < result.length; i++) {
+        total += result[i].total;
+    }
+    let text = `
+Twoja ankieta ${poll.core.url} dobiegła właśnie końca.
+Zobaczmy jak przedstawia się w liczbach. 
+Łącznie na wszystkie pytania padło ${total} odpowiedzi!
+`;
+
+console.log(result);
+
+    for(let i = 0; i < result.length; i++) {
+        if(result[i].type === 'text'){
+            text += `
+Pytanie otwarte “${result[i].title}” otrzymało ${result[i].total} odpowiedzi. Oto one: 
+            `;
+            for(let j = 0; j < result[i].answers.length; j++){
+                text += `
+    ${result[i].answers[j]}
+                `;
+            }
+        } else {
+            const max = result[i].answers.reduce((max, current) => (max.count < current.count) ? current : max);
+            text += `
+Pytanie “${result[i].title}” otrzymało ${result[i].total} odpowiedzi. 
+Najpopularniejszym wyborem okazał się ${max.value}, który otrzymał ${max.count} głosów. 
+            `;
+        }
+    }
+
+text += `
+Pozdrawiamy,
+Zespół Apollo
+`
+
+
+console.log(text);
+  let info = await transporter.sendMail({
+    from: 'apollo.ankiety@gmail.com', 
+    to: poll.settings.email, 
+    subject: "Twoja ankieta dobiegła końca", 
+    text: text
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
 
 router.put('/', async (req, res) => {
@@ -76,4 +163,28 @@ router.delete('/', async (req, res) => {
     }
 });
 
+cron.schedule('* * * * *', async () => {
+    console.log('running a task every minute');
+    let dateObj = new Date();
+    dateObj.setDate(dateObj.getDate() - 7);
+    const to_send = (await Poll.find()).filter(poll => poll.settings.expire < (Date.now()));
+    const to_delete = (await Poll.find()).filter(poll => poll.settings.expire < dateObj);
+    for(let i = 0; i < to_delete.length; i++) {
+        await Poll.findByIdAndDelete(to_delete[i]._id);
+    }
+    for(let i = 0; i < to_send.length; i++) {
+        if(to_send[i].settings.sendSummary) {
+            console.log("send: ", to_send[i].settings);
+            await send_email(to_send[i]).catch(console.error);
+            to_send[i].settings.sendSummary = false;
+        }
+        to_send[i].settings.sendSummary = true;
+        await Poll.findByIdAndUpdate(to_send[i]._id, to_send[i]);
+    }
+    console.log(to_delete);
+});
+
 module.exports = router;
+
+//////////////////////////////////////////////////////////////////////////////
+
