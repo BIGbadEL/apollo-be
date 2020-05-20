@@ -148,7 +148,15 @@ router.get('/:url', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    res.send(await Poll.find());
+    let dateObj = new Date();
+    dateObj.setDate(dateObj.getDate() - 7);
+    const polls = await Poll.find();
+    for(let i = 0; i < polls.length; i++){
+        polls[i].settings.expired = polls[i].settings.expire < dateObj;
+        console.log(polls[i].settings);
+    }
+    //console.log(polls);
+    res.send(polls);
 });
 
 router.delete('/', async (req, res) => {
@@ -178,7 +186,6 @@ cron.schedule('* * * * *', async () => {
             await send_email(to_send[i]).catch(console.error);
             to_send[i].settings.sendSummary = false;
         }
-        to_send[i].settings.sendSummary = true;
         await Poll.findByIdAndUpdate(to_send[i]._id, to_send[i]);
     }
     console.log(to_delete);
@@ -186,5 +193,4 @@ cron.schedule('* * * * *', async () => {
 
 module.exports = router;
 
-//////////////////////////////////////////////////////////////////////////////
 

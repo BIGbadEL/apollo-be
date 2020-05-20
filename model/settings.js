@@ -19,6 +19,10 @@ const settingsSchema = new mongoose.Schema({
     expire: {
         type: Date,
         required: true
+    },
+    expired: {
+        type: Boolean,
+        default: false
     }
 });
 
