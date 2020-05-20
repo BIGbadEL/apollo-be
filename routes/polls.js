@@ -155,7 +155,6 @@ router.get('/', async (req, res) => {
         polls[i].settings.expired = polls[i].settings.expire < dateObj;
         console.log(polls[i].settings);
     }
-    //console.log(polls);
     res.send(polls);
 });
 

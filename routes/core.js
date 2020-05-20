@@ -59,7 +59,7 @@ router.get('/new', async (req, res) => {
         settings: new Settings({
             requireSignature: false,
             resultsAccess: true,
-            sendSumary: false,
+            sendSummary: false,
             email: "",
             expire: dateObj
         })
